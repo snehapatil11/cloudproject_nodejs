@@ -4,14 +4,16 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const fileRoutes = require("./Routes/fileupload")
 const awsConfigJson = require("./Config/awsdynamodbconfig")
+require('dotenv').config();
 var app = express();
 
 let awsConfig = {
-  "region": awsConfigJson.region,
- "endpoint": awsConfigJson.endpoint,
- "accessKeyId": awsConfigJson.accessKeyId, 
- "secretAccessKey": awsConfigJson.secretAccessKey
+  "region": process.env.region,
+ "endpoint": process.env.endpoint,
+ "accessKeyId": process.env.accessKeyId, 
+ "secretAccessKey": process.env.secretAccessKey
 };
+
 app.use(cors());
 app.use("/api", fileRoutes);
 

@@ -6,13 +6,13 @@ const bodyParser = require('body-parser')
 const router = express.Router()
 router.use(bodyParser.json())
 const awsConfigJson = require("../Config/awsconfig")
+require('dotenv').config();
 
 let awsConfig = {
-  "region": awsConfigJson.region,
-  "accessKeyId": awsConfigJson.accessKeyId, 
-  "secretAccessKey": awsConfigJson.secretAccessKey
+  "region": process.env.region,
+  "accessKeyId": process.env.accessKeyId, 
+  "secretAccessKey": process.env.secretAccessKey
  };
-
 AWS.config.update(awsConfig);
 var s3 = new AWS.S3();
 

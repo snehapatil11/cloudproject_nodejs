@@ -3,7 +3,6 @@ var express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const fileRoutes = require("./Routes/fileupload")
-const awsConfigJson = require("./Config/awsdynamodbconfig")
 require('dotenv').config();
 var app = express();
 

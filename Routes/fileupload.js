@@ -5,7 +5,6 @@ const express = require("express")
 const bodyParser = require('body-parser')
 const router = express.Router()
 router.use(bodyParser.json())
-const awsConfigJson = require("../Config/awsconfig")
 require('dotenv').config();
 
 let awsConfig = {

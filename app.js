@@ -24,7 +24,7 @@ var s3 = new AWS.S3();
 app.use(bodyParser.json({ type: 'application/json' }));
 
 app.listen(8081, () => {
-    console.log("Server running on port 4001");
+    console.log("Server running on port 8081");
 })
 app.get('/', function (req, res) {
 

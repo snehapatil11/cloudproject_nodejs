@@ -13,6 +13,19 @@ let awsConfig = {
  "secretAccessKey": process.env.secretAccessKey
 };
 
+let cognitoConfig ={
+    "region": process.env.region,
+    "userPool": process.env.userPool,
+    "userPoolBaseUri": process.env.userPoolBaseUri,
+    "clientId": process.env.clientId,
+    "callbackUri": process.env.callbackUri,
+    "signoutUri": process.env.signoutUri,
+    "cloudFrontDomainName": process.env.cloudFrontDomainName,
+    "endPointUrl":process.env.endPointUrl,
+    "tokenScopes": process.env.tokenScopes
+}
+
+
 app.use(cors());
 app.use("/api", fileRoutes);
 
@@ -23,17 +36,19 @@ var s3 = new AWS.S3();
 
 app.use(bodyParser.json({ type: 'application/json' }));
 
-app.listen(8081, () => {
+app.listen(4001, () => {
     console.log("Server running on port 8081");
 })
 app.get('/', function (req, res) {
-
   res.send('Hello World!')
-
 })
 
-app.get('/users', function (req, res) {
-    const params = {  
+app.get('/cognitodetails', function(req, res){
+  res.send(cognitoConfig);
+})
+
+app.get('/allusers', function (req, res) {
+    const params = { 
       TableName: "storageFiles"
     }    
     dynamoDb.scan(params, (error, result) => {
@@ -44,7 +59,7 @@ app.get('/users', function (req, res) {
       }
   
       if (result) { 
-        //console.log(result.Items);
+        console.log(result.Items);
         return res.json(result.Items);
       } 
       else { return res.status(404).json({ error: "User not found" }); }  
@@ -52,6 +67,34 @@ app.get('/users', function (req, res) {
   
 })
 
+app.get('/users/:email', function (req, res) {
+  const useremail = req.params.email;
+  console.log(useremail);
+  const params = { 
+    TableName: "storageFiles",
+    FilterExpression: '#email = :email',
+    ExpressionAttributeNames: {
+        '#email': 'Email',
+    },
+    ExpressionAttributeValues: {
+        ':email': useremail,
+    },
+  }    
+  dynamoDb.scan(params, (error, result) => {
+
+    if (error) {  
+      console.log(error);  
+      return res.status(400).json({ error: 'Could not get user' });  
+    }
+
+    if (result) { 
+      console.log(result.Items);
+      return res.json(result.Items);
+    } 
+    else { return res.status(404).json({ error: "User not found" }); }  
+  });
+
+})
 app.post('/postusers', function(req, res){
     const params = {  
       TableName: "storageFiles",

@@ -88,13 +88,40 @@ app.get('/users/:email', function (req, res) {
     }
 
     if (result) { 
-      console.log(result.Items);
       return res.json(result.Items);
     } 
     else { return res.status(404).json({ error: "User not found" }); }  
   });
 
 })
+
+app.get('/file/:filename', function (req, res) {
+  const file = req.params.filename;
+  const params = { 
+    TableName: "storageFiles",
+    FilterExpression: '#filename = :filename',
+    ExpressionAttributeNames: {
+        '#filename': 'FileName',
+    },
+    ExpressionAttributeValues: {
+        ':filename': file,
+    },
+  }    
+  dynamoDb.scan(params, (error, result) => {
+
+    if (error) {  
+      console.log(error);  
+      return res.status(400).json({ error: 'Could not get user' });  
+    }
+
+    if (result) { 
+      return res.json(result.Items);
+    } 
+    else { return res.status(404).json({ error: "User not found" }); }  
+  });
+
+})
+
 app.post('/postusers', function(req, res){
     const params = {  
       TableName: "storageFiles",
@@ -118,6 +145,31 @@ app.post('/postusers', function(req, res){
 
 })
 
+app.get('/updatefiledata/:fileId',function(req, res){
+  console.log("on server for update");
+  var time = new Date().toDateString() + " " + new Date().toLocaleTimeString();
+  var params = {
+    TableName: "storageFiles",
+    Key: 
+    {
+      "Id": req.params.fileId      
+    },
+    UpdateExpression: "SET UpdatedAt = :time",
+    ExpressionAttributeValues:{
+        ":time": time
+    },
+    ReturnValues:"UPDATED_NEW"
+  };
+  console.log(params);
+  dynamoDb.update(params, function(err, data) {
+    if (err) {
+        console.error("Unable to update item. Error JSON:", JSON.stringify(err, null, 2));
+    } else {
+        console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+        res.json(data);
+    }
+  });
+})
 app.delete('/deletefiledata/:fileId',function(req, res){
   const params = {  
     TableName: "storageFiles",

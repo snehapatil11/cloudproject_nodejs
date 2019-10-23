@@ -13,19 +13,6 @@ let awsConfig = {
  "secretAccessKey": process.env.secretAccessKey
 };
 
-let cognitoConfig ={
-    "region": process.env.region,
-    "userPool": process.env.userPool,
-    "userPoolBaseUri": process.env.userPoolBaseUri,
-    "clientId": process.env.clientId,
-    "callbackUri": process.env.callbackUri,
-    "signoutUri": process.env.signoutUri,
-    "cloudFrontDomainName": process.env.cloudFrontDomainName,
-    "endPointUrl":process.env.endPointUrl,
-    "tokenScopes": process.env.tokenScopes
-}
-
-
 app.use(cors());
 app.use("/api", fileRoutes);
 
@@ -36,15 +23,11 @@ var s3 = new AWS.S3();
 
 app.use(bodyParser.json({ type: 'application/json' }));
 
-app.listen(4001, () => {
+app.listen(8081, () => {
     console.log("Server running on port 8081");
 })
 app.get('/', function (req, res) {
   res.send('Hello World!')
-})
-
-app.get('/cognitodetails', function(req, res){
-  res.send(cognitoConfig);
 })
 
 app.get('/allusers', function (req, res) {

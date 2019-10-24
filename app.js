@@ -14,6 +14,7 @@ let awsConfig = {
 };
 
 app.use(cors());
+app.options('*', cors());
 app.use("/api", cors(), fileRoutes);
 
 

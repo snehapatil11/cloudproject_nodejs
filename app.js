@@ -99,6 +99,7 @@ app.get('/file/:filename', function (req, res) {
     }
 
     if (result) { 
+      res.setHeader('Access-Control-Allow-Origin', '*');
       return res.json(result.Items);
     } 
     else { return res.status(404).json({ error: "User not found" }); }  
@@ -121,6 +122,7 @@ app.post('/postusers', function(req, res){
       }
       if(result){
         console.log(result);
+        res.setHeader('Access-Control-Allow-Origin', '*');
         return res.json({result});
       }
       else
@@ -167,6 +169,7 @@ app.delete('/deletefiledata/:fileId',function(req, res){
     if (err) {
         console.error("Unable to delete item. Error JSON:", JSON.stringify(err, null, 2));
     } else {
+      res.setHeader('Access-Control-Allow-Origin', '*');
         res.json(data);
     }
   });

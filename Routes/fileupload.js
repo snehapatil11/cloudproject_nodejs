@@ -19,6 +19,7 @@ var upload = multer({
     storage: multerS3({
       s3: s3,
       bucket: 'cloudstoragebucket1',
+      limits: { fileSize: 10*1024*1024 },
       contentType: multerS3.AUTO_CONTENT_TYPE,
       metadata: function (req, file, cb) {
         cb(null, {fieldName: 'testfile'});
